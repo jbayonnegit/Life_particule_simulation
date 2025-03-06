@@ -1,2 +1,2 @@
-# Maze_generator
+# Life particule generation
 Continuing my journey through C ! 
