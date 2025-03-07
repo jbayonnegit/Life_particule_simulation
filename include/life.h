@@ -69,7 +69,23 @@ typedef struct s_win
 	SDL_Window		*window; 
 }				t_win;
 
+typedef struct s_quadtree
+{
+	SDL_Point			min;			// Point superieur gauche
+	SDL_Point			max;			// Point inferieur droit
+	t_boolean			leave;			// True si c'est une feuille, False si c'est une branche
+	int					*in_view;		// Array des Boids en vue
+	int					nb_view;		// Array des Boids en vue
+	struct s_quadtree	*NW;			// Branche Nord Ouest
+	struct s_quadtree	*NE;			// Branche Nord Est
+	struct s_quadtree	*SW;			// Branche Sud Ouest
+	struct s_quadtree	*SE;			// Branche Sud Est
+}				t_quad;
+
+
 t_boolean	window_intialisation(t_win *win);
-t_cel **cel_init(void);
+t_cel 		**cel_init(void);
+t_quad  	*quadtree(int max_x, int min_x, int max_y, int min_y, t_cel **particles, int *view, int nb_v, int *k);
+void		free_tree(t_quad *root);
 
 #endif
