@@ -1,4 +1,62 @@
-#include "include/life.h"
+#include "../include/life.h"
+
+int	*first_init(int add)
+{
+	int	*new;
+
+	new = malloc(sizeof(int) * 2);
+	if (!new)
+		return (NULL);
+	new[0] = add;
+	new[1] = 0;
+	return (new);
+}
+
+int	*in_view_realloc(int *old, int add, int nb)
+{
+	int	*new;
+	int	i;
+
+	if (!old)
+	{
+		old = first_init(add);
+		if (!old)
+			return (NULL);
+		return (old);
+	}
+	new = malloc(sizeof(int) * (nb + 2));
+	if (!new)
+		return (free(old), NULL);
+	i = 0;
+	while(i < nb - 1)
+	{
+		new[i] = old[i];
+		i++;
+	}
+	new[i] = add;
+	new[i + 1] = 0;
+	return (new);
+}
+
+t_quad  *quadrant_init(float max_x, float max_y, float min_x, float min_y){
+
+	t_quad  *new;
+
+	new = (t_quad *)malloc(sizeof(t_quad));
+	if (!new)
+		return (NULL);
+	new->NE = NULL;
+	new->NW = NULL;
+	new->SE = NULL;
+	new->SW = NULL;
+	new->in_view = NULL;
+	new->leave = false;
+	new->max.x = max_x;
+	new->max.y = max_y;
+	new->min.x = min_x;
+	new->min.y = min_y;
+	return (new);
+}
 
 
 t_quad  *quadtree(int max_x, int min_x, int max_y, int min_y, t_cel **particles, int *view, int nb_v, int *k)

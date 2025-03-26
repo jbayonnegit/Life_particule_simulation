@@ -1,20 +1,19 @@
-#include "include/life.h"
+#include "../include/life.h"
 
 float	rand_position(float min, float max)
 {
 	float scale;
 
-	srand((unsigned int)time(NULL));
 	scale = rand() / (float)RAND_MAX;
 	return (min + scale * (max - min));
 }
 
 int	rand_color(void)
 {
-	return ((rand() % 5) + 1);
+	return ((rand() % 6));
 }
 
-t_cel *new_particules(void)
+t_cel *new_particle(void)
 {
 	t_cel	*new;
 
@@ -23,9 +22,10 @@ t_cel *new_particules(void)
 		return (NULL);
 	new->vx = 0;
 	new->vy = 0;
-	new->x = rand_position(10.0f, (float)(WIDTH - 10));
-	new->y = rand_position(10.0f, (float)(HEIGHT - 10));
-	new->COLOR = rand_color();
+	new->x = rand_position(0, (float)(WIDTH));
+	new->y = rand_position(0, (float)(HEIGHT));
+	new->type = rand_color();
+	return (new);
 }
 
 t_cel **cel_init(void)
@@ -44,4 +44,5 @@ t_cel **cel_init(void)
 			return (free_particles_init(particles, i), NULL);
 		i++;
 	}
+	return (particles);
 } 

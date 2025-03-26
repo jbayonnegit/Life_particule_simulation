@@ -1,4 +1,4 @@
-#include "include/life.h"
+#include "../include/life.h"
 
 void free_particles_init(t_cel **particles, int i)
 {
@@ -38,4 +38,11 @@ void	free_tree(t_quad *root)
 		root->NE = NULL;
 	}
 	free(root);
+}
+
+void	window_clear(t_win *glb)
+{
+	SDL_DestroyRenderer(glb->render);
+	SDL_DestroyWindow(glb->window);
+	SDL_Quit();
 }

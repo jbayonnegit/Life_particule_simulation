@@ -3,7 +3,7 @@
 
 # define V_MAX 8
 # define V_MIN 3
-# define NB_PARTICULE 1000
+# define NB_PARTICULE 10000
 # define HEIGHT 1080
 # define WIDTH 1920
 # define M_PI 3.14159265358979323846
@@ -39,7 +39,7 @@ typedef	struct s_color
 	t_boolean	attract_by_red;
 	t_boolean	attract_by_yellow;
 	t_boolean	attract_by_orange;
-	t_boolean	attract_by_red;
+	t_boolean	attract_by_color;
 	t_boolean	attract_by_purple;
 }				t_color;
 
@@ -49,17 +49,18 @@ typedef struct s_particles_rules
 	t_color	RED;
 	t_color	YELLOW;
 	t_color	ORANGE;
-	t_color	RED;
+	t_color	GREEN;
 	t_color	PURPLE;
 }				t_rules;
 
 typedef struct cel
 {
-	float	x;
-	float	y;
-	float	vx;
-	float	vy;
-	t_type	COLOR;
+	float		x;
+	float		y;
+	float		vx;
+	float		vy;
+	t_type		type;
+	SDL_Color	color;
 
 }			t_cel;
 
@@ -87,5 +88,8 @@ t_boolean	window_intialisation(t_win *win);
 t_cel 		**cel_init(void);
 t_quad  	*quadtree(int max_x, int min_x, int max_y, int min_y, t_cel **particles, int *view, int nb_v, int *k);
 void		free_tree(t_quad *root);
+void 		free_particles_init(t_cel **particles, int i);
+void		window_clear(t_win *glb);
+void		draw_particles(SDL_Renderer *renderer, t_cel **particles, float *radius);
 
 #endif
