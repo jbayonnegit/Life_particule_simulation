@@ -68,7 +68,7 @@ t_quad  *quadtree(int max_x, int min_x, int max_y, int min_y, t_cel **particles,
 
 	i = 0;
 	c = 0;
-	 if (*k >= NB_PARTICULE)
+	if (*k >= NB_PARTICULE)
 	 	return (NULL);
 	root = quadrant_init(max_x, max_y, min_x, min_y);
 	if (!root)

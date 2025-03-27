@@ -7,13 +7,17 @@ t_boolean	window_intialisation(t_win *win)
 	win->window = SDL_CreateWindow("Life Particule Simulation", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, 0);
 	if (!win->window)
 	{
-		//protect
+		free(win);
+		win = NULL;
 		return (false);
 	}
 	win->render = SDL_CreateRenderer(win->window, -1, SDL_RENDERER_ACCELERATED);
 	if (!win->render)
 	{
-		//protect
+		free(win->window);
+		win->window = NULL;
+		free(win);
+		win = NULL;
 		return (false);
 	}
 	return (true);

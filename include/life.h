@@ -4,17 +4,25 @@
 # define V_MAX 8
 # define V_MIN 3
 # define NB_PARTICULE 10000
-# define HEIGHT 1080
-# define WIDTH 1920
+# define HEIGHT 900
+# define WIDTH 1440
 # define M_PI 3.14159265358979323846
-# define D_MIN 100
+# define D_MIN 30
 # define QUAD_CAP 40
-# include <SDL2/SDL.h>
+# include </opt/homebrew/include/SDL2/SDL.h>
+# include </opt/homebrew/include/SDL2/SDL_ttf.h>
 # include <stdlib.h>
 # include <math.h>
 # include <time.h>
 # include <stdlib.h>
 # include <math.h>
+
+typedef struct s_coord
+{
+	int	x;
+	int	y;
+}			t_coord;
+
 
 typedef enum s_boolean
 {
@@ -83,13 +91,39 @@ typedef struct s_quadtree
 	struct s_quadtree	*SE;			// Branche Sud Est
 }				t_quad;
 
+// CEL 
+
+t_cel 		**cel_init(void);
+t_boolean	update_particles(t_cel **particles, float M_force[6][6]);
+
+// WINDOW INIT
 
 t_boolean	window_intialisation(t_win *win);
-t_cel 		**cel_init(void);
+t_boolean	win_menu_initialisation(t_win *win);
+void		window_clear(t_win *glb);
+
+// CREATE TREE
+
 t_quad  	*quadtree(int max_x, int min_x, int max_y, int min_y, t_cel **particles, int *view, int nb_v, int *k);
+
+// FREE 
+
 void		free_tree(t_quad *root);
 void 		free_particles_init(t_cel **particles, int i);
-void		window_clear(t_win *glb);
+
+// SEARCH IN TREE
+int			*in_view_realloc(int *old, int add, int nb);
+int			*view_init_first(void);
+t_boolean	find_neighbor(t_quad *root, float x, float y, float r, int **neighbor, int *count, t_cel **particles, t_cel *current);
+
+// DRAW
+void		init_menu(t_win *win);
 void		draw_particles(SDL_Renderer *renderer, t_cel **particles, float *radius);
+void		draw_menu(SDL_Rect M_menu[7][7], t_win *win);
+
+
+// SIMULATION FORCES
+
+void	get_force(t_cel **particles, t_cel *current, float M_force[6][6], int *in_view, int nb);
 
 #endif

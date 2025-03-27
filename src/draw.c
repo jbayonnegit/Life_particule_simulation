@@ -2,50 +2,50 @@
 
 void drawCircle(SDL_Renderer *renderer, int centerX, int centerY, int radius)
 {
-    int x = radius;
-    int y = 0;
-    int err = 0;
-    
-    while (x >= y)
-    {
-        // Draw 8 points (one in each octant)
-        SDL_RenderDrawPoint(renderer, centerX + x, centerY + y);
-        SDL_RenderDrawPoint(renderer, centerX + y, centerY + x);
-        SDL_RenderDrawPoint(renderer, centerX - y, centerY + x);
-        SDL_RenderDrawPoint(renderer, centerX - x, centerY + y);
-        SDL_RenderDrawPoint(renderer, centerX - x, centerY - y);
-        SDL_RenderDrawPoint(renderer, centerX - y, centerY - x);
-        SDL_RenderDrawPoint(renderer, centerX + y, centerY - x);
-        SDL_RenderDrawPoint(renderer, centerX + x, centerY - y);
-        
-        // Update using the midpoint algorithm
-        if (err <= 0)
-        {
-            y += 1;
-            err += 2*y + 1;
-        }
-        if (err > 0)
-        {
-            x -= 1;
-            err -= 2*x + 1;
-        }
-    }
+	int x = radius;
+	int y = 0;
+	int err = 0;
+	
+	while (x >= y)
+	{
+		// Draw 8 points (one in each octant)
+		SDL_RenderDrawPoint(renderer, centerX + x, centerY + y);
+		SDL_RenderDrawPoint(renderer, centerX + y, centerY + x);
+		SDL_RenderDrawPoint(renderer, centerX - y, centerY + x);
+		SDL_RenderDrawPoint(renderer, centerX - x, centerY + y);
+		SDL_RenderDrawPoint(renderer, centerX - x, centerY - y);
+		SDL_RenderDrawPoint(renderer, centerX - y, centerY - x);
+		SDL_RenderDrawPoint(renderer, centerX + y, centerY - x);
+		SDL_RenderDrawPoint(renderer, centerX + x, centerY - y);
+		
+		// Update using the midpoint algorithm
+		if (err <= 0)
+		{
+			y += 1;
+			err += 2*y + 1;
+		}
+		if (err > 0)
+		{
+			x -= 1;
+			err -= 2*x + 1;
+		}
+	}
 }
 
 void drawFilledCircle(SDL_Renderer *renderer, int centerX, int centerY, int radius)
 {
-    for (int w = 0; w < radius * 2; w++)
-    {
-        for (int h = 0; h < radius * 2; h++)
-        {
-            int dx = radius - w;
-            int dy = radius - h;
-            if ((dx*dx + dy*dy) <= (radius * radius))
-            {
-                SDL_RenderDrawPoint(renderer, centerX + dx, centerY + dy);
-            }
-        }
-    }
+	for (int w = 0; w < radius * 2; w++)
+	{
+		for (int h = 0; h < radius * 2; h++)
+		{
+			int dx = radius - w;
+			int dy = radius - h;
+			if ((dx*dx + dy*dy) <= (radius * radius))
+			{
+				SDL_RenderDrawPoint(renderer, centerX + dx, centerY + dy);
+			}
+		}
+	}
 }
 
 void	set_color(SDL_Renderer *renderer, t_cel *particles)
@@ -63,6 +63,7 @@ void	set_color(SDL_Renderer *renderer, t_cel *particles)
 	if (particles->type == GREEN)
 		SDL_SetRenderDrawColor(renderer, 52, 211, 24, 255);
 }
+
 void	draw_particles(SDL_Renderer *renderer, t_cel **particles, float *radius)
 {
 	int	i;
@@ -75,4 +76,75 @@ void	draw_particles(SDL_Renderer *renderer, t_cel **particles, float *radius)
 		drawFilledCircle(renderer, particles[i]->x, particles[i]->y, (int)*radius);
 		i++;
 	}
+}
+
+void	init_menu(t_win *win)
+{
+	SDL_Rect	M_menu[7][7];
+	t_coord		coord;
+	int			i;
+	int			j;
+
+	i = 0;
+	coord.y = HEIGHT / 19;
+	while (i < 7)
+	{
+		coord.x = WIDTH / 4;
+		j = 0;
+		while (j < 7)
+		{
+			M_menu[i][j].x = coord.x; 
+			M_menu[i][j].y = coord.y;
+			M_menu[i][j].w = WIDTH / 14; 
+			M_menu[i][j].h = HEIGHT / 9;
+			coord.x += WIDTH / 14; 
+			j++;
+		}		
+		coord.y += HEIGHT / 9;
+		i++; 
+	}
+	draw_menu(M_menu, win);
+}
+
+// ADD RENDER TEXT
+
+void	draw_menu(SDL_Rect M_menu[7][7], t_win *win)
+{
+	int		i;
+	int		j;
+
+	i = 0;
+	SDL_SetRenderDrawColor(win->render, 0, 0, 0, 0);
+	SDL_RenderClear(win->render);
+	while (i < 7)
+	{
+		j = 0;
+		while (j < 7)
+		{
+			if ((i == 0 || j == 0) && !(j == 0 && i == 0))
+			{
+				if ((j == 0 && i == 1) || (j == 1 && i == 0))
+					SDL_SetRenderDrawColor(win->render, 59, 255, 255, 255); // BLUE
+				else if ((j == 2 && i == 0) || (j == 0 && i == 2))
+					SDL_SetRenderDrawColor(win->render, 242, 25, 25, 255); 	// RED
+				else if ((j == 3 && i == 0) || (j == 0 && i == 3))
+					SDL_SetRenderDrawColor(win->render, 255, 145, 0, 255);	// ORANGE
+				else if ((j == 4 && i == 0) || (j == 0 && i == 4))
+					SDL_SetRenderDrawColor(win->render, 255, 236, 0, 255); 	// YELLOW
+				else if ((j == 5 && i == 0) || (j == 0 && i == 5))
+					SDL_SetRenderDrawColor(win->render, 166, 64, 255, 255); // PUPRPLE
+				else if ((j == 6 && i == 0) || (j == 0 && i == 6))
+					SDL_SetRenderDrawColor(win->render, 52, 211, 24, 255); 	// GREEN
+				SDL_RenderFillRect(win->render, &M_menu[i][j]);
+			}
+			else if (!(j == 0 && i == 0))
+			{
+				SDL_SetRenderDrawColor(win->render, 255, 255, 255, 255);
+				SDL_RenderDrawRect(win->render, &M_menu[i][j]);
+			}
+			j++;
+		}
+		i++;
+	}
+	SDL_RenderPresent(win->render);
 }

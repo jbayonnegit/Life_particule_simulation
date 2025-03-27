@@ -1,12 +1,15 @@
 NAME = life_particules
 SRC =	init_particules.c \
+		search_in_tree.c \
+		simulation.c \
 		free.c \
 		main.c \
 		window.c \
 		quadtree.c \
 		draw.c \
 
-CFLAGS = -Wall -Wextra -Werror -Iinclude
+CFLAGS = -Wall -Wextra -Iinclude `sdl2-config --cflags` `pkg-config --cflags SDL2_ttf`
+LDFLAGS = `sdl2-config --libs` `pkg-config --libs SDL2_ttf` -lm
 CC = cc
 OBJ_DIR = obj
 SRC_DIR = src
@@ -15,20 +18,20 @@ OBJS = $(addprefix $(OBJ_DIR)/, $(SRC:%.c=%.o))
 SRCS = $(addprefix $(SRC_DIR)/, $(SRC))
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
-				@mkdir -p $(OBJ_DIR)
-				$(CC) $(CFLAGS) -I. -g3 -c $< -o $@
+	@mkdir -p $(OBJ_DIR)
+	$(CC) $(CFLAGS) -g3 -c $< -o $@
 
 all : $(NAME)
 
 $(NAME) : $(OBJS)
-		$(CC) $(OBJS) -o $(NAME) $(CFLAGS) -lSDL2 -g3 -lm
+	$(CC) $(OBJS) -o $(NAME) $(LDFLAGS) -g3
 
 clean :
-		rm -f -r $(OBJ_DIR)
+	rm -f -r $(OBJ_DIR)
 
 fclean : clean
-		rm -f $(NAME)
+	rm -f $(NAME)
 
 re : fclean all
 
-.PHONY : fclean clean all ren
+.PHONY : fclean clean all re
