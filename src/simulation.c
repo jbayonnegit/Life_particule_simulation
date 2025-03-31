@@ -1,49 +1,48 @@
 #include "../include/life.h"
 
-void    applie_force(float M_force[6][6], int row, int collum, t_cel *particules)
+void    applie_force(float M_force[6][6], t_cel *neighbor, t_cel *current)
 {
-	float	speed;
-	float 	f;
-	float	beta;
+	float	delta_x;
+	float	delta_y;
 
-	f = 0;
-	beta = D_MIN * 0.3;
-	if (beta < D_MIN)
-		f = (D_MIN / beta) - 1;
-	particules->vx *= M_force[row][collum];
-	particules->vy *= M_force[row][collum];
-	speed = sqrtf(particules->vx * particules->vx + particules->vy * particules->vy);
-	if (speed > V_MAX)
-	{
-		particules->vx = (particules->vx / speed) * V_MAX; 
-		particules->vy = (particules->vy / speed) * V_MAX; 
-	}
-	else if (speed < V_MIN)
-	{
-		particules->vx = (particules->vx / speed) * V_MIN; 
-		particules->vy = (particules->vy / speed) * V_MIN; 
-	}
-	particules->x += particules->vx;
-	particules->y += particules->vy;
+	delta_y = current->y - neighbor->y;
+	delta_x = current->x - neighbor->x;
+	delta_y *= M_force[neighbor->type][current->type];
+	delta_x *= M_force[neighbor->type][current->type];
+	current->vx += delta_x;
+	current->vy += delta_y;
 }
 
 void	get_force(t_cel **particles, t_cel *current, float M_force[6][6], int *in_view, int nb)
 {
-	int	i;
+	int		i;
+	float	speed;
 
 	i = 0;
 	while (i < nb)
 	{
-		applie_force(M_force, particles[in_view[i]]->type, current->type, current);
+		applie_force(M_force, particles[in_view[i]], current);
 		i++;
 	}
+	speed = sqrtf(current->vx * current->vx + current->vy * current->vy);
+	if (speed > V_MAX && speed != 0)
+	{
+		current->vx = (current->vx / speed) * V_MAX;
+		current->vy = (current->vy / speed) * V_MAX;
+	}
+	if (speed < V_MIN && speed != 0)
+	{
+	    current->vx = (current->vx / speed) * V_MIN;
+	    current->vy = (current->vy / speed) * V_MIN;
+	}
+	current->x += current->vx;
+	current->y += current->vy;
 }
 
-t_boolean	update_particles(t_cel **particles, float M_force[6][6])
+t_boolean	update_particles(t_cel **particles, float M_force[6][6], t_win *win)
 {
 	t_quad	*root;
 	int		*in_view;
-	int		*tmp;
 	int		c;
 	int		k;
 
@@ -57,25 +56,19 @@ t_boolean	update_particles(t_cel **particles, float M_force[6][6])
 	k = 0;
 	free(in_view);
 	in_view = NULL;
-	tmp = NULL;
 	while (particles[k])
 	{
-	
-		printf("in_view add : %p, tmp add : %p\n", in_view, tmp);
-		if (in_view)
-			tmp = in_view;
 		c = 0;
 		if (!find_neighbor(root, particles[k]->x, particles[k]->y, D_MIN, &in_view, &c, particles, particles[k]))
-			return (free_tree(root), free(tmp), false);
-		if (tmp)
-		{
-			printf("tmp add : %p\n", tmp);
-			//free(tmp);
-			tmp = NULL;
-		}
+			return (free_tree(root), false);
 		get_force(particles, particles[k], M_force, in_view, c);
+		free(in_view);
+		in_view = NULL;
 		k++;
 	}
+	(void)win;
+	//draw_tree(root, win);
 	//free(in_view);
+	free_tree(root);
 	return (true);
 }

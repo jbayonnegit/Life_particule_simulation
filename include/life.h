@@ -3,12 +3,12 @@
 
 # define V_MAX 8
 # define V_MIN 3
-# define NB_PARTICULE 10000
+# define NB_PARTICULE 2000
 # define HEIGHT 900
 # define WIDTH 1440
 # define M_PI 3.14159265358979323846
 # define D_MIN 30
-# define QUAD_CAP 40
+# define QUAD_CAP 50
 # include </opt/homebrew/include/SDL2/SDL.h>
 # include </opt/homebrew/include/SDL2/SDL_ttf.h>
 # include <stdlib.h>
@@ -94,7 +94,7 @@ typedef struct s_quadtree
 // CEL 
 
 t_cel 		**cel_init(void);
-t_boolean	update_particles(t_cel **particles, float M_force[6][6]);
+t_boolean	update_particles(t_cel **particles, float M_force[6][6], t_win *win);
 
 // WINDOW INIT
 
@@ -117,13 +117,18 @@ int			*view_init_first(void);
 t_boolean	find_neighbor(t_quad *root, float x, float y, float r, int **neighbor, int *count, t_cel **particles, t_cel *current);
 
 // DRAW
-void		init_menu(t_win *win);
-void		draw_particles(SDL_Renderer *renderer, t_cel **particles, float *radius);
-void		draw_menu(SDL_Rect M_menu[7][7], t_win *win);
 
+void		draw_tree(t_quad *root, t_win *glb);
+void		init_menu(t_win *win, float M_force[6][6]);
+void		draw_particles(SDL_Renderer *renderer, t_cel **particles, float *radius);
+void		draw_menu(SDL_Rect M_menu[7][7], t_win *win, float M_force[6][6]);
 
 // SIMULATION FORCES
 
-void	get_force(t_cel **particles, t_cel *current, float M_force[6][6], int *in_view, int nb);
+void		get_force(t_cel **particles, t_cel *current, float M_force[6][6], int *in_view, int nb);
+
+// MATH
+
+float		rand_position(float min, float max);
 
 #endif
