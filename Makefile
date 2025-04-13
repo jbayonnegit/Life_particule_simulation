@@ -7,9 +7,10 @@ SRC =	init_particules.c \
 		window.c \
 		quadtree.c \
 		draw.c \
+		set_force.c \
 
-CFLAGS = -Wall -Wextra -Iinclude `sdl2-config --cflags` `pkg-config --cflags SDL2_ttf`
-LDFLAGS = `sdl2-config --libs` `pkg-config --libs SDL2_ttf` -lm
+CFLAGS = -Wall -Wextra -Iinclude `sdl2-config --cflags` -fsanitize=address
+LDFLAGS = `sdl2-config --libs` -lm
 CC = cc
 OBJ_DIR = obj
 SRC_DIR = src
@@ -24,7 +25,7 @@ $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
 all : $(NAME)
 
 $(NAME) : $(OBJS)
-	$(CC) $(OBJS) -o $(NAME) $(LDFLAGS) -g3
+	$(CC) $(OBJS) -o $(NAME) $(LDFLAGS) -fsanitize=address -g3
 
 clean :
 	rm -f -r $(OBJ_DIR)

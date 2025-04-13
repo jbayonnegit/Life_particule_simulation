@@ -80,6 +80,7 @@ t_quad  *quadtree(int max_x, int min_x, int max_y, int min_y, t_cel **particles,
 			c++;
 			tmp = root->in_view;
 			root->in_view = in_view_realloc(root->in_view, view[i], c);
+			// protect
 			if (tmp)
 				free(tmp);
 		}

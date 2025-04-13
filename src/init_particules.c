@@ -10,7 +10,7 @@ float	rand_position(float min, float max)
 
 int	rand_color(void)
 {
-	return ((rand() % 6));
+	return ((rand() % 4));
 }
 
 t_cel *new_particle(void)

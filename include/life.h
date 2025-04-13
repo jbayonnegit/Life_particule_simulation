@@ -1,14 +1,15 @@
 #ifndef LIFE_H
 # define LIFE_H
 
-# define V_MAX 8
-# define V_MIN 3
-# define NB_PARTICULE 2000
+# define V_MAX 2.5f
+# define V_MIN 0.01f
+# define NB_PARTICULE 8000
+# define RAYON 1
 # define HEIGHT 900
 # define WIDTH 1440
 # define M_PI 3.14159265358979323846
-# define D_MIN 30
-# define QUAD_CAP 50
+# define D_MIN 50.0f
+# define QUAD_CAP 200
 # include </opt/homebrew/include/SDL2/SDL.h>
 # include </opt/homebrew/include/SDL2/SDL_ttf.h>
 # include <stdlib.h>
@@ -23,7 +24,6 @@ typedef struct s_coord
 	int	y;
 }			t_coord;
 
-
 typedef enum s_boolean
 {
 	false,
@@ -32,34 +32,13 @@ typedef enum s_boolean
 
 typedef	enum s_type
 {
-	RED,
 	BLUE,
-	GREEN,
-	YELLOW,
+	RED,
 	ORANGE,
+	YELLOW,
 	PURPLE,
+	GREEN,
 }			t_type;
-
-typedef	struct s_color
-{
-	t_type		color;
-	t_boolean	attract_by_blue;
-	t_boolean	attract_by_red;
-	t_boolean	attract_by_yellow;
-	t_boolean	attract_by_orange;
-	t_boolean	attract_by_color;
-	t_boolean	attract_by_purple;
-}				t_color;
-
-typedef struct s_particles_rules
-{
-	t_color	BLUE;
-	t_color	RED;
-	t_color	YELLOW;
-	t_color	ORANGE;
-	t_color	GREEN;
-	t_color	PURPLE;
-}				t_rules;
 
 typedef struct cel
 {
@@ -114,18 +93,21 @@ void 		free_particles_init(t_cel **particles, int i);
 // SEARCH IN TREE
 int			*in_view_realloc(int *old, int add, int nb);
 int			*view_init_first(void);
-t_boolean	find_neighbor(t_quad *root, float x, float y, float r, int **neighbor, int *count, t_cel **particles, t_cel *current);
+t_boolean	find_neighbor(t_quad *root, float x, float y, int **neighbor, int *count, t_cel **particles, t_cel *current);
+int			**neighbour_tab_init(t_quad *root, t_cel **cel);
+
 
 // DRAW
 
 void		draw_tree(t_quad *root, t_win *glb);
 void		init_menu(t_win *win, float M_force[6][6]);
-void		draw_particles(SDL_Renderer *renderer, t_cel **particles, float *radius);
+void		draw_particles(SDL_Renderer *renderer, t_cel **particles, int radius, float zoom);
 void		draw_menu(SDL_Rect M_menu[7][7], t_win *win, float M_force[6][6]);
 
 // SIMULATION FORCES
 
-void		get_force(t_cel **particles, t_cel *current, float M_force[6][6], int *in_view, int nb);
+void		set_force(int x, int y, float M_force[6][6]);
+void		get_force(t_cel **particles, t_cel *current, float M_force[6][6], int *in_view, int nb, int k);
 
 // MATH
 

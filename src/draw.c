@@ -1,5 +1,30 @@
 #include "../include/life.h"
 
+void	draw_tree(t_quad *root, t_win *glb)
+{
+	SDL_Rect	quad;
+
+	quad.x = root->min.x;
+	quad.y = root->min.y;
+	quad.w = root->max.x;
+	quad.h = root->max.y;
+	SDL_SetRenderDrawColor(glb->render, 50, 255, 0, 255);
+	SDL_RenderDrawRect(glb->render, &quad);
+	if (root->leave == true)
+		return ;
+	else
+	{
+		if (root->NW)
+			draw_tree(root->NW, glb);
+		if (root->NE)
+			draw_tree(root->NE, glb);
+		if (root->SW)
+			draw_tree(root->SW, glb);
+		if (root->SE)
+			draw_tree(root->SE, glb);
+	}
+}
+
 void drawCircle(SDL_Renderer *renderer, int centerX, int centerY, int radius)
 {
 	int x = radius;
@@ -64,16 +89,35 @@ void	set_color(SDL_Renderer *renderer, t_cel *particles)
 		SDL_SetRenderDrawColor(renderer, 52, 211, 24, 255);
 }
 
-void	draw_particles(SDL_Renderer *renderer, t_cel **particles, float *radius)
+void	set_color_transparent(SDL_Renderer *renderer, t_cel *particles)
+{
+	if (particles->type == BLUE)
+		SDL_SetRenderDrawColor(renderer, 59, 255, 220, 50);
+	if (particles->type == RED)
+		SDL_SetRenderDrawColor(renderer, 200, 25, 25, 50);
+	if (particles->type == ORANGE)
+		SDL_SetRenderDrawColor(renderer, 200, 145, 0, 50);
+	if (particles->type == YELLOW)
+		SDL_SetRenderDrawColor(renderer, 200, 236, 0, 50);
+	if (particles->type == PURPLE)
+		SDL_SetRenderDrawColor(renderer, 166, 64, 200, 50);
+	if (particles->type == GREEN)
+		SDL_SetRenderDrawColor(renderer, 52, 170, 24, 50);
+}
+
+void	draw_particles(SDL_Renderer *renderer, t_cel **particles, int radius, float zoom)
 {
 	int	i;
 
 	i = 0;
 	while (particles[i])
-	{
+	{//
+		set_color_transparent(renderer, particles[i]);
+		//drawFilledCircle(renderer, particles[i]->x, particles[i]->y, radius + 2);
+	//	drawCircle(renderer, particles[i]->x * zoom, particles[i]->y * zoom, radius + 2);
 		set_color(renderer, particles[i]);
-		drawCircle(renderer, particles[i]->x, particles[i]->y, (int)*radius);
-		drawFilledCircle(renderer, particles[i]->x, particles[i]->y, (int)*radius);
+		drawFilledCircle(renderer, particles[i]->x * zoom, particles[i]->y * zoom, radius);
+
 		i++;
 	}
 }
@@ -167,7 +211,7 @@ void	draw_menu(SDL_Rect M_menu[7][7], t_win *win, float M_force[6][6])
 			}
 			else if (!(j == 0 && i == 0))
 			{
-				color_switch(M_force[i][j], win->render);
+				color_switch(M_force[i - 1][j -1], win->render);
 				SDL_RenderFillRect(win->render, &M_menu[i][j]);
 				SDL_SetRenderDrawColor(win->render, 0, 0, 0, 0);
 				SDL_RenderDrawRect(win->render, &M_menu[i][j]);
