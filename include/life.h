@@ -1,15 +1,15 @@
 #ifndef LIFE_H
 # define LIFE_H
 
-# define V_MAX 2.5f
+# define V_MAX 3.5f
 # define V_MIN 0.01f
-# define NB_PARTICULE 8000
+# define NB_PARTICULE 10000
 # define RAYON 1
 # define HEIGHT 900
 # define WIDTH 1440
 # define M_PI 3.14159265358979323846
-# define D_MIN 50.0f
-# define QUAD_CAP 200
+# define D_MIN 20.0f
+# define QUAD_CAP 300
 # include </opt/homebrew/include/SDL2/SDL.h>
 # include </opt/homebrew/include/SDL2/SDL_ttf.h>
 # include <stdlib.h>
@@ -107,7 +107,7 @@ void		draw_menu(SDL_Rect M_menu[7][7], t_win *win, float M_force[6][6]);
 // SIMULATION FORCES
 
 void		set_force(int x, int y, float M_force[6][6]);
-void		get_force(t_cel **particles, t_cel *current, float M_force[6][6], int *in_view, int nb, int k);
+void		get_force(t_cel **particles, t_cel *current, float M_force[6][6], int *in_view, int k);
 
 // MATH
 

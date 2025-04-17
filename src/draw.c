@@ -111,10 +111,10 @@ void	draw_particles(SDL_Renderer *renderer, t_cel **particles, int radius, float
 
 	i = 0;
 	while (particles[i])
-	{//
-		set_color_transparent(renderer, particles[i]);
+	{
+		//set_color_transparent(renderer, particles[i]);
 		//drawFilledCircle(renderer, particles[i]->x, particles[i]->y, radius + 2);
-	//	drawCircle(renderer, particles[i]->x * zoom, particles[i]->y * zoom, radius + 2);
+		//drawCircle(renderer, particles[i]->x * zoom, particles[i]->y * zoom, radius + 2);
 		set_color(renderer, particles[i]);
 		drawFilledCircle(renderer, particles[i]->x * zoom, particles[i]->y * zoom, radius);
 

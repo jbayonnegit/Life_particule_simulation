@@ -2,7 +2,7 @@
 
 t_boolean	refresh(t_cel **particles, t_win *glb, float M_force[6][6], float zoom)
 {
-	SDL_SetRenderDrawColor(glb->render, 2, 11, 20, 255);
+	SDL_SetRenderDrawColor(glb->render, 0, 0, 0, 255);
 	SDL_RenderClear(glb->render);
 	if (!update_particles(particles, M_force, glb))
 		return (false);

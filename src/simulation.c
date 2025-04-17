@@ -11,18 +11,22 @@ void	resolve_collision(t_cel *current, t_cel *neigbor)
 	delta_x = current->x - neigbor-> x;
 	delta_y = current->y - neigbor-> y;
 	delta_norme = sqrtf(delta_x * delta_x + delta_y * delta_y);
-	if (delta_norme < (2 * RAYON) + 3 && delta_norme != 0)
+	if (delta_norme < (2 * RAYON) + 5 && delta_norme != 0)
 	{
 		if (delta_norme == 0)
 		{
-			current->x += RAYON * 2 + 3;
-			current->y += RAYON * 2 + 3;
+			current->x += RAYON * 2 + 5;
+			current->y += RAYON * 2 + 5;
 		}
-		collapse = ((RAYON * 2) + 3) - delta_norme;
-		current->x += (delta_x / delta_norme) * (collapse / 2.0f);
-		neigbor->x -= (delta_x / delta_norme) * (collapse / 2.0f);
-		current->y += (delta_y / delta_norme) * (collapse / 2.0f);
-		neigbor->y -= (delta_y / delta_norme) * (collapse / 2.0f);
+		collapse = (((RAYON * 2) + 5) - delta_norme) / 2.0f;
+		
+		delta_x = delta_x / delta_norme;
+		current->x += delta_x * collapse;
+		neigbor->x -= delta_x * collapse;
+		
+		delta_y = delta_y / delta_norme;
+		current->y += delta_y * collapse;
+		neigbor->y -= delta_y * collapse;
 	}
 }
 
@@ -69,19 +73,19 @@ void	to_zero(t_cel *current)
 	}
 }
 
-void	get_force(t_cel **particles, t_cel *current, float M_force[6][6], int *in_view, int nb, int k)
+void	get_force(t_cel **particles, t_cel *current, float M_force[6][6], int *in_view, int k)
 {
 	int		i;
 	float	dif;
 	float	speed;
 
-	i = 0;
+	i = 1;
 	dif = 0;
-	while (i < nb)
+	while (i < in_view[0])
 	{
 		if (in_view[i] == k)
 			i++;
-		if (i >= nb)
+		if (i >= in_view[0])
 			break ;
 		applie_force(M_force, particles[in_view[i]], current);
 		i++;
@@ -99,7 +103,6 @@ void	get_force(t_cel **particles, t_cel *current, float M_force[6][6], int *in_v
 	}
 	current->x += current->vx;
 	current->y += current->vy;
-	to_zero(current);
 	if (current->x >= WIDTH)
 	{
 		dif = WIDTH - current->x;
@@ -114,33 +117,38 @@ void	get_force(t_cel **particles, t_cel *current, float M_force[6][6], int *in_v
 	}
 	else if (current->y <= 0)
 		current->y += HEIGHT;
+	to_zero(current);
 }
 
-t_boolean	collision(t_cel **particles, t_quad *root)
+void	collision(t_cel **particles, t_quad *root, int **in_view)
 {
 	int	k;
 	int	i;
-	int	c;
-	int	*in_view;
 
-	in_view = NULL;
-	c = 0;
 	k = 0;
 	while (particles[k])
 	{
-		c = 0;
-		i = 0;
-		if (!find_neighbor(root, particles[k]->x, particles[k]->y, &in_view, &c, particles, particles[k]))
-			return (free_tree(root), false);
-		while (i < c)
+		i = 1;
+		while (i < in_view[k][0])
 		{
-			resolve_collision(particles[k], particles[in_view[i]]);
+			resolve_collision(particles[k], particles[in_view[k][i]]);
 			i++;
 		}
-		free(in_view);
-		in_view = NULL;
 		k++;
 	}
+}
+
+void	free_tab(int **tab)
+{
+	int	i;
+
+	i = 0;
+	while (i < NB_PARTICULE)
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
 }
 
 t_boolean	update_particles(t_cel **particles, float M_force[6][6], t_win *win)
@@ -148,9 +156,7 @@ t_boolean	update_particles(t_cel **particles, float M_force[6][6], t_win *win)
 	t_quad	*root;
 	int		**neighbour_tab;
 	int		*in_view;
-	int		c;
 	int		k;
-	int		i;
 
 	k = 0;
 	in_view = view_init_first();
@@ -162,19 +168,16 @@ t_boolean	update_particles(t_cel **particles, float M_force[6][6], t_win *win)
 	k = 0;
 	free(in_view);
 	in_view = NULL;
+	neighbour_tab = neighbour_tab_init(root, particles);
+	if (!neighbour_tab)
+		return (free_tree(root), false);
 	while (particles[k])
 	{
-		c = 0;
-		i = 0;
-		if (!find_neighbor(root, particles[k]->x, particles[k]->y, &in_view, &c, particles, particles[k]))
-			return (free_tree(root), false);
-		get_force(particles, particles[k], M_force, in_view, c, k);
-		free(in_view);
-		in_view = NULL;
+		get_force(particles, particles[k], M_force, neighbour_tab[k], k);
 		k++;
 	}
-	if (!collision(particles, root))
-		return (false);
+	collision(particles, root, neighbour_tab);
+	free_tab(neighbour_tab);
 	free_tree(root);
 	return (true);
 }

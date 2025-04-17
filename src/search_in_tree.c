@@ -82,14 +82,14 @@ int	*view_init_first(void)
 	return (view_init);
 }
 
-void	free_tab_init(int **tab, int n);
+void	free_tab_init(int **tab, int n)
 {
 	int	i;
 
 	i = 0;
 	while (i < n)
 	{
-		free(tab[i])
+		free(tab[i]);
 		i++;
 	}
 	free(tab);
@@ -123,6 +123,7 @@ int	*add_nb_to_view(int *old, int k)
 int	**neighbour_tab_init(t_quad *root, t_cel **cel)
 {
 	int	**tab;
+	int	*tmp;
 	int	k;
 	int	n;
 
@@ -133,11 +134,14 @@ int	**neighbour_tab_init(t_quad *root, t_cel **cel)
 	n = 0;
 	while (n < NB_PARTICULE)
 	{
-		if (!find_neighbor(root, cel[n]->x, cel[n]->y, &tab[n], &k, cel, cel[n]))
+		tmp = NULL;
+		k = 0;
+		if (!find_neighbor(root, cel[n]->x, cel[n]->y, &tmp, &k, cel, cel[n]))
 			return (free_tab_init(tab, n), NULL);
-		tab[n] = add_nb_to_view(tab[n], k);
-		if (!tab[n])
+		tmp = add_nb_to_view(tmp, k);
+		if (!tmp)
 			return (free_tab_init(tab, n), NULL);
+		tab[n] = tmp;
 		n++;
 	}
 	return (tab);
