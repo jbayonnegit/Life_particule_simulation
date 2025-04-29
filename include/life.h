@@ -3,15 +3,14 @@
 
 # define V_MAX 3.5f
 # define V_MIN 0.01f
-# define NB_PARTICULE 1500
-# define RAYON 1
-# define HEIGHT 900
-# define WIDTH 1440
+# define NB_PARTICULE 1000
+# define RAYON 4
+# define HEIGHT 1440
+# define WIDTH 2560
 # define M_PI 3.14159265358979323846
-# define D_MIN 30.0f
-# define QUAD_CAP 50
-# include </opt/homebrew/include/SDL2/SDL.h>
-# include </opt/homebrew/include/SDL2/SDL_ttf.h>
+# define D_MIN 100.0f
+# define QUAD_CAP 200
+# include <SDL2/SDL.h>
 # include <stdlib.h>
 # include <math.h>
 # include <time.h>

@@ -82,27 +82,28 @@ void	set_color(SDL_Renderer *renderer, t_cel *particles)
 	if (particles->type == ORANGE)
 		SDL_SetRenderDrawColor(renderer, 255, 145, 0, 255);
 	if (particles->type == YELLOW)
-		SDL_SetRenderDrawColor(renderer, 255, 236, 0, 255);
+		SDL_SetRenderDrawColor(renderer, 230, 206, 0, 255);
 	if (particles->type == PURPLE)
 		SDL_SetRenderDrawColor(renderer, 166, 64, 255, 255);
 	if (particles->type == GREEN)
 		SDL_SetRenderDrawColor(renderer, 52, 211, 24, 255);
 }
 
-void	set_color_transparent(SDL_Renderer *renderer, t_cel *particles)
+void	set_color_light(SDL_Renderer *renderer, t_cel *particles)
 {
 	if (particles->type == BLUE)
-		SDL_SetRenderDrawColor(renderer, 59, 255, 220, 50);
+		SDL_SetRenderDrawColor(renderer, 70, 255, 220, 10);
 	if (particles->type == RED)
-		SDL_SetRenderDrawColor(renderer, 200, 25, 25, 50);
+		SDL_SetRenderDrawColor(renderer, 200, 30, 30, 10);
 	if (particles->type == ORANGE)
-		SDL_SetRenderDrawColor(renderer, 200, 145, 0, 50);
+		SDL_SetRenderDrawColor(renderer, 210, 150, 0, 10);
 	if (particles->type == YELLOW)
-		SDL_SetRenderDrawColor(renderer, 200, 236, 0, 50);
+		SDL_SetRenderDrawColor(renderer, 220, 236, 0, 10);
 	if (particles->type == PURPLE)
-		SDL_SetRenderDrawColor(renderer, 166, 64, 200, 50);
+		SDL_SetRenderDrawColor(renderer, 166, 70, 200, 10);
 	if (particles->type == GREEN)
-		SDL_SetRenderDrawColor(renderer, 52, 170, 24, 50);
+		SDL_SetRenderDrawColor(renderer, 52, 190, 35, 10);
+//	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 }
 
 void	draw_particles(SDL_Renderer *renderer, t_cel **particles, int radius, float zoom)
@@ -112,9 +113,16 @@ void	draw_particles(SDL_Renderer *renderer, t_cel **particles, int radius, float
 	i = 0;
 	while (particles[i])
 	{
-		//set_color_transparent(renderer, particles[i]);
-		//drawFilledCircle(renderer, particles[i]->x, particles[i]->y, radius + 2);
-		//drawCircle(renderer, particles[i]->x * zoom, particles[i]->y * zoom, radius + 2);
+		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+		drawCircle(renderer, particles[i]->x * zoom, particles[i]->y * zoom, radius + 2);
+		set_color_light(renderer, particles[i]);
+		drawFilledCircle(renderer, particles[i]->x * zoom, particles[i]->y * zoom, radius + 3);
+		set_color(renderer, particles[i]);
+		drawCircle(renderer, particles[i]->x * zoom, particles[i]->y * zoom, radius + 4);
+		drawCircle(renderer, particles[i]->x * zoom, particles[i]->y * zoom, radius + 5);
+		drawCircle(renderer, particles[i]->x * zoom, particles[i]->y * zoom, radius + 6);
+		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+		drawCircle(renderer, particles[i]->x * zoom, particles[i]->y * zoom, radius + 7);
 		set_color(renderer, particles[i]);
 		drawFilledCircle(renderer, particles[i]->x * zoom, particles[i]->y * zoom, radius);
 

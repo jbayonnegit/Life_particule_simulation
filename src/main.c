@@ -21,6 +21,15 @@ void	random_init_force(float M_menu[6][6])
 	}
 }
 
+void	menu_to_zero(float M_menu[6][6])
+{
+	for (int i = 0; i < 6; i++)
+	{
+		for (int j = 0; j < 6; j++)
+			M_menu[i][j] = 0;
+	}	
+}
+
 t_boolean	run_menu(float M_force[6][6], t_win *win, int k)
 {
 	t_boolean	run;
@@ -34,6 +43,16 @@ t_boolean	run_menu(float M_force[6][6], t_win *win, int k)
 		init_menu(win, M_force);
 		while (SDL_PollEvent(&event))
 		{
+			if (event.type == SDL_KEYUP)
+			{
+				if (event.key.keysym.sym == SDLK_0)
+					menu_to_zero(M_force);
+			}
+			if (event.type == SDL_KEYUP)
+			{
+				if (event.key.keysym.sym == SDLK_9)
+					random_init_force(M_force);
+			}
 			if (event.type == SDL_KEYUP)
 			{
 				if (event.key.keysym.sym == SDLK_RETURN)
